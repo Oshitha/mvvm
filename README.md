@@ -1,2 +1,2 @@
 # mvvm
-# MVVM Swift UI Basic file structure wtih http request 
+# MVVM Swift UI Basic file structure with http request 
