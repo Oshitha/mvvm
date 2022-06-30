@@ -19,6 +19,7 @@ final class QouteServiceImpl: QouteService{
     
     func fetchRandomQoutes() async throws -> [Quote] {
     
+        //HTTP Client can be changed
         //this can be change according to the requirement
         // Ex- Almofire,Moya
         let urlSession  = URLSession.shared
