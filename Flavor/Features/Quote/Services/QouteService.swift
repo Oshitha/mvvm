@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 enum services :String{
     case quotes = "/api/quotes"
@@ -13,9 +14,20 @@ enum services :String{
 
 protocol QouteService{
     func fetchRandomQoutes() async throws ->[Quote]
+    func getQuoteList(endPoint: QuoteAPIs) -> AnyPublisher<[QuotesResponseElementElement], APIError>
 }
 
 final class QouteServiceImpl: QouteService{
+    
+    var apiManager: ApiManager
+    
+    init(apiManager: ApiManager = ApiManager()){
+        self.apiManager = apiManager
+    }
+    
+    func getQuoteList(endPoint: QuoteAPIs) -> AnyPublisher<[QuotesResponseElementElement], APIError> {
+        return apiManager.request(endPoint.resolve()).map(\.value).eraseToAnyPublisher()
+    }
     
     func fetchRandomQoutes() async throws -> [Quote] {
     

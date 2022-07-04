@@ -29,7 +29,8 @@ struct QoutesScreen: View {
             
         }
         ).task {
-            await viewModel.getRandomQoutes()
+            //await viewModel.getRandomQoutes()
+            viewModel.getQuotesList()
         }
     }
 }

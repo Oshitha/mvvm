@@ -6,16 +6,21 @@
 //
 
 import Foundation
+import Combine
 
 
 protocol QoutesViewModel :ObservableObject{
     func getRandomQoutes() async
+    func getQuotesList()
 }
 
-@MainActor
+    //@MainActor
 final class QoutesViewModelImpl : QoutesViewModel{
     
-    @Published private(set) var qoutes:[Quote] = []
+    //@Published private(set) var qoutes:[Quote] = []
+    @Published private(set) var qoutes:[QuotesResponseElementElement] = []
+    
+    var cancellables = Set<AnyCancellable>()
     
     private var qouteService:QouteService
     
@@ -25,9 +30,26 @@ final class QoutesViewModelImpl : QoutesViewModel{
     
     func getRandomQoutes() async {
         do{
-            self.qoutes = try await qouteService.fetchRandomQoutes()
+            //self.qoutes = try await qouteService.fetchRandomQoutes()
         }catch{
             print(error)
         }
+    }
+    
+    func getQuotesList() {
+        let cancellable =  qouteService.getQuoteList(endPoint: .getQuotesList)
+            .sink { result in
+                
+                switch result{
+                case .failure(let error):
+                    print("Handle error: \(error)")
+                case .finished:
+                    print("FINISH9")
+                }
+            } receiveValue: { quote in
+                print("quote",quote)
+                self.qoutes = quote
+            }
+        cancellables.insert(cancellable)
     }
 }
